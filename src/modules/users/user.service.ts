@@ -5,6 +5,8 @@ import { TUser } from "./user.interface";
 import config from "../../app/config";
 import { TTeacher } from "../teacher/teacher.interface";
 import { TeacherModel } from "../teacher/teacher.model";
+import { TResearcher } from "../researcher/researcher.interface";
+import { ResearcherModel } from "../researcher/researcher.model";
 
 export const createStudentService = async (studentData: TStudent) => {
   // 1. Construct user data from student
@@ -71,7 +73,36 @@ export const createTeacherService = async (teacherData: TTeacher) => {
   };
 };
 
+
+export const createResearcherService = async (researcherData: TResearcher) => {
+  const userData: TUser = {
+    name: researcherData.name,
+    email: researcherData.email,
+    password: researcherData.password || config.default_password,
+    role: "researcher",
+  };
+
+  const existingUser = await UserModel.findOne({ email: userData.email });
+  if (existingUser) {
+    throw new Error("Email already exists");
+  }
+
+  const newUser = await UserModel.create(userData);
+  researcherData.user = newUser._id;
+
+  const newResearcher = await ResearcherModel.create(researcherData);
+
+  return {
+    newResearcher,
+  };
+};
+
+export const ResearcherServices = {
+  createResearcherService,
+};
+
 export const UserServices = {
   createStudentService,
-  createTeacherService
+  createTeacherService,
+  createResearcherService
 };

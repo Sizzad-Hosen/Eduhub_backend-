@@ -9,6 +9,7 @@ export type Address = {
 export interface TResearcher {
   name: string;
   email: string;
+  password:string;
   number: string;
   address: Address;
   expertise: string;

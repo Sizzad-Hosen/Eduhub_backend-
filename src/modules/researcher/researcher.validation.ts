@@ -13,9 +13,11 @@ export const researchPaperValidation = z.object({
 });
 
 export const createResearcherValidation = z.object({
-  name: z.string().min(1),
+ body:z.object({
+   name: z.string().min(1),
   email: z.string().email(),
   number: z.string().min(6),
+  password: z.string().min(6),
   address: addressValidation,
   expertise: z.string(),
   experience: z.string(),
@@ -25,8 +27,14 @@ export const createResearcherValidation = z.object({
   phd: z.string().optional(),
   currentlyWorkingAt: z.string().optional(),
   bio: z.string(),
-  user: z.string(), // Expecting MongoDB ObjectId as string
+  user: z.string().min(24, "User must be a valid Mongo ObjectId").optional(),
   profileImg: z.string().optional(),
   researchArea: z.string().optional(),
   researchPaper: z.array(researchPaperValidation).optional(),
+ })
 });
+
+
+export const ResearcherValidationSchemas = {
+  createResearcherValidation
+}

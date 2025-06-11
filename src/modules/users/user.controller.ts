@@ -29,13 +29,26 @@ export const createTeacherController = catchAsync(async (req: Request, res: Resp
   });
 });
 
+export const createResearcherController = catchAsync(async (req, res) => {
 
+  const researcher = req.body;
+
+  const result = await UserServices.createResearcherService(researcher);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Researcher created successfully",
+    data: result,
+  });
+});
 
 
 export const UserControllers = {
 
  createStudentController,
- createTeacherController 
+ createTeacherController ,
+ createResearcherController
 
 }
 
