@@ -30,9 +30,29 @@ export const studentValidation = z.object({
   })
 
 
+  
+});
+export const studentUpdateValidation = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    email: z.string().email("Invalid email address").optional(),
+    number: z.string().min(6, "Number must be at least 6 characters").optional(),
+    password: z.string().min(6, "Password must be at least 6 characters").optional(),
+    address: addressValidation.optional(),
+    experience: z.string().optional(),
+    skill: z.string().optional(),
+    university: z.string().optional(),
+    bio: z.string().optional(),
+    work: z.string().optional(),
+    user: z.string().min(24, "User must be a valid Mongo ObjectId").optional(),
+    academicInterests: z.array(z.string()).optional(),
+    course: z.string().optional(),
+    connectRequests: z.array(z.string()).optional(),
+    profileImg: z.string().url("Profile image must be a valid URL").optional(),
+  }),
 });
 
-
 export const studentValidationSchemas = {
-  studentValidation
+  studentValidation,
+  studentUpdateValidation
 }

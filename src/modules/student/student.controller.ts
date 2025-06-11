@@ -19,9 +19,29 @@ export const getAllStudentsController = catchAsync(async (req, res) => {
   });
 });
 
+export const updateStudentController = catchAsync(async (req, res) => {
+
+   const { studentId } = req.params;
+  const payload = req.body;
+
+  console.log(req.params);
+  console.log(req.body);
+
+
+  const result = await StudentServices.updateStudentService(studentId, payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Student updated successfully",
+    data: result,
+  });
+});
+
 
 export const StudentControllers = {
 
-    getAllStudentsController
-    
+    getAllStudentsController,
+    updateStudentController
+
 }
