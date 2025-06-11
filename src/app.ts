@@ -5,6 +5,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
 import notFound from './app/middlewares/notFound'
+import { UserRoutes } from './modules/users/user.route'
 
 const app: Application = express()
 
@@ -23,7 +24,7 @@ app.use(express.json())
 // Application routes
 // app.use('/api/v1/students', StudentRoute)
 
-// app.use('/api/v1', router)
+ app.use('/api/v1/users',UserRoutes)
 
 app.use(globalErrorHandler)
 app.use(notFound)

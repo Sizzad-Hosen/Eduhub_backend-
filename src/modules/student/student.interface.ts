@@ -10,9 +10,10 @@ export type Address = {
 export interface TStudent extends Document {
   name: string;
   email: string;
+  password:string;
   number: string;
   address: Address;
-  experince: string;
+  experience: string;
   skill: string;
   university: string;
   bio: string;
