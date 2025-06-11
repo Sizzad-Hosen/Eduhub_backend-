@@ -36,7 +36,29 @@ export const createTeacherValidation = z.object({
  })
 });
 
+export const updateTeacherValidation = z.object({
+  body: z.object({
+    name: z.string().min(1, "Name is required").optional(),
+    email: z.string().email("Invalid email").optional(),
+    number: z.string().min(6, "Phone number must be at least 6 digits").optional(),
+    password: z.string().min(6, "Password is required").optional(),
+    address: addressValidation.optional(),
+    expertise: z.string().min(1, "Expertise is required").optional(),
+    experience: z.string().min(1, "Experience is required").optional(),
+    skill: z.string().min(1, "Skill is required").optional(),
+    bsc: z.string().min(1, "BSc institution is required").optional(),
+    msc: z.string().optional(),
+    phd: z.string().optional(),
+    currentlyWorkingAt: z.string().optional(),
+    bio: z.string().min(1, "Bio is required").optional(),
+    user: z.string().min(24, "User must be a valid Mongo ObjectId").optional(),
+    profileImg: z.string().optional(),
+  }),
+});
+
+
 
 export const TeacherValidationSchemas = {
-  createTeacherValidation
+  createTeacherValidation,
+  updateTeacherValidation
 }
