@@ -7,6 +7,7 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler'
 import notFound from './app/middlewares/notFound'
 import { UserRoutes } from './modules/users/user.route'
 import { StudentRoutes } from './modules/student/student.route'
+import { ResearcherRoutes } from './modules/researcher/researcher.route'
 
 const app: Application = express()
 
@@ -27,6 +28,7 @@ app.use(express.json())
 
  app.use('/api/v1/users',UserRoutes)
  app.use('/api/v1/students',StudentRoutes)
+ app.use('/api/v1/researchers',ResearcherRoutes)
 
 app.use(globalErrorHandler)
 app.use(notFound)

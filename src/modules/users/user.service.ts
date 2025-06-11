@@ -97,9 +97,7 @@ export const createResearcherService = async (researcherData: TResearcher) => {
   };
 };
 
-export const ResearcherServices = {
-  createResearcherService,
-};
+
 
 export const UserServices = {
   createStudentService,

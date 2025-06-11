@@ -34,7 +34,30 @@ export const createResearcherValidation = z.object({
  })
 });
 
+export const updateResearcherValidation = z.object({
+  body: z.object({
+    name: z.string().min(1).optional(),
+    email: z.string().email().optional(),
+    number: z.string().min(6).optional(),
+    password: z.string().min(6).optional(),
+    address: addressValidation.optional(),
+    expertise: z.string().optional(),
+    experience: z.string().optional(),
+    skill: z.string().optional(),
+    bsc: z.string().optional(),
+    msc: z.string().optional(),
+    phd: z.string().optional(),
+    currentlyWorkingAt: z.string().optional(),
+    bio: z.string().optional(),
+    user: z.string().min(24, "User must be a valid Mongo ObjectId").optional(),
+    profileImg: z.string().optional(),
+    researchArea: z.string().optional(),
+    researchPaper: z.array(researchPaperValidation).optional(),
+  }),
+});
+
 
 export const ResearcherValidationSchemas = {
-  createResearcherValidation
+  createResearcherValidation,
+  updateResearcherValidation
 }
