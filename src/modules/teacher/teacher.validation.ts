@@ -15,9 +15,12 @@ export const addressValidation = z.object({
 
 // Teacher validation schema
 export const createTeacherValidation = z.object({
-  name: z.string().min(1, "Name is required"),
+ body:z.object({
+
+   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
   number: z.string().min(6, "Phone number must be at least 6 digits"),
+  password:z.string().min(6,"password is required"),
   address: addressValidation,
   expertise: z.string().min(1, "Expertise is required"),
   experience: z.string().min(1, "Experience is required"),
@@ -27,6 +30,13 @@ export const createTeacherValidation = z.object({
   phd: z.string().optional(),
   currentlyWorkingAt: z.string().optional(),
   bio: z.string().min(1, "Bio is required"),
-  user: objectIdValidation,
+  user: z.string().min(24, "User must be a valid Mongo ObjectId").optional(),
   profileImg: z.string().optional(),
+
+ })
 });
+
+
+export const TeacherValidationSchemas = {
+  createTeacherValidation
+}

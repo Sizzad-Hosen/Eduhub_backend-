@@ -17,10 +17,25 @@ export const createStudentController = catchAsync(async (req: Request, res: Resp
 });
 
 
+export const createTeacherController = catchAsync(async (req: Request, res: Response) => {
+  
+    const result = await UserServices.createTeacherService(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Successfully created teacher account and profile",
+    data: result,
+  });
+});
+
+
+
 
 export const UserControllers = {
 
  createStudentController,
+ createTeacherController 
 
 }
 

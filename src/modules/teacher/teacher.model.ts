@@ -17,6 +17,7 @@ const teacherSchema = new Schema<TTeacher>(
     email: { type: String, required: true, unique: true },
     number: { type: String, required: true },
     address: { type: addressSchema, required: true },
+    password:{type:String, required:true},
     expertise:{type:String, required:true},
     experience: { type: String, required: true },
     skill: { type: String, required: true },

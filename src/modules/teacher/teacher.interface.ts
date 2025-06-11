@@ -7,6 +7,7 @@ export type Address = {
 };
 
 export interface TTeacher {
+  password: string | undefined;
   name: string;
   email: string;
   number: string;
