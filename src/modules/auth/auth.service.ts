@@ -90,23 +90,21 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const forgetPassword = async (userEmail: string) => {
+
+const forgetPassword = async (email: string) => {
   try {
-    // ✅ Check if the user exists
-    const user = await User.findOne({ email: userEmail });
-    console.log('user', user);
+    // ✅ Check if the user exists by email
+    const user = await User.findOne({ email });
+    console.log('User found:', user);
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
     }
 
-    // ✅ Generate JWT for password reset
     const jwtPayload = {
-       userId: user._id.toString(),
-       role: user.role,
+      userId: user._id.toString(),
+      role: user.role,
     };
-
-    console.log('JWT Payload:', jwtPayload);
 
     const resetToken = createToken(
       jwtPayload,
@@ -114,10 +112,11 @@ const forgetPassword = async (userEmail: string) => {
       '10m'
     );
 
-    const resetLink = `${config.reset_pass_ui_link}/reset-password?email=${jwtPayload.userId}&token=${resetToken}`;
-    
+    // ✅ Create reset link (you can include email in query optionally)
+    const resetLink = `${config.reset_pass_ui_link}/reset-password?token=${resetToken}`;
+
     await sendEmail(user.email, resetLink);
-  
+
     console.log('Reset Password Link:', resetLink);
     return resetLink;
   } catch (error) {
@@ -125,7 +124,6 @@ const forgetPassword = async (userEmail: string) => {
     throw error;
   }
 };
-
 
 const resetPassword = async (
   payload: { email: string; newPassword: string },
