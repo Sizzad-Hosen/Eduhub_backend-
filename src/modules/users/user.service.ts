@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { TStudent } from "../student/student.interface";
 import { StudentModel } from "../student/student.model";
 import { User } from "./user.model";
@@ -7,6 +8,9 @@ import { TTeacher } from "../teacher/teacher.interface";
 import { TeacherModel } from "../teacher/teacher.model";
 import { TResearcher } from "../researcher/researcher.interface";
 import { ResearcherModel } from "../researcher/researcher.model";
+import { verifyToken } from "../auth/auth.utils";
+import AppError from "../../app/config/error/AppError";
+import httpStatus from "http-status";
 
 export const createStudentService = async (studentData: TStudent) => {
   // 1. Construct user data from student
@@ -83,6 +87,7 @@ export const createResearcherService = async (researcherData: TResearcher) => {
   };
 
   const existingUser = await User.findOne({ email: userData.email });
+
   if (existingUser) {
     throw new Error("Email already exists");
   }
@@ -98,9 +103,36 @@ export const createResearcherService = async (researcherData: TResearcher) => {
 };
 
 
+const getMe = async (token: string) => {
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
+  const { userId, role } = decoded;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid user ID format');
+  }
+
+  let result = null;
+
+  if (role === 'student') {
+    result = await StudentModel.findOne({ user: userId }).populate('user');
+  } else if (role === 'teacher') {
+    result = await TeacherModel.findOne({ user: userId }).populate('user');
+  } else if (role === 'researcher') {
+    result = await ResearcherModel.findOne({ user: userId }).populate('user');
+  }
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+  }
+
+  return result;
+};
+
+
 
 export const UserServices = {
   createStudentService,
   createTeacherService,
-  createResearcherService
+  createResearcherService,
+  getMe
 };

@@ -24,13 +24,12 @@ const loginUser = async (payload: TLoginUser) => {
     user.password
   );
 
-
-  console.log("user pass", user.password);
-  console.log("password login", password)
-
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'Password does not match!');
   }
+
+  console.log("login user", user);
+
 
   // Step 3: Token Payload
   const jwtPayload = {
@@ -66,17 +65,17 @@ const refreshToken = async (token: string) => {
   // checking if the given token is valid
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
-  const { userEmail, iat } = decoded;
+  const { userId, iat } = decoded;
 
   // checking if the user is exist
-  const user = await User.findOne(userEmail);
+  const user = await User.findOne(userId);
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
   
   const jwtPayload = {
-    userEmail: user.email,
+    userId: user._id.toString(),
     role: user.role,
   };
   
@@ -103,8 +102,8 @@ const forgetPassword = async (userEmail: string) => {
 
     // ✅ Generate JWT for password reset
     const jwtPayload = {
-      userEmail: user.email,
-      role: user.role,
+       userId: user._id.toString(),
+       role: user.role,
     };
 
     console.log('JWT Payload:', jwtPayload);
@@ -115,7 +114,7 @@ const forgetPassword = async (userEmail: string) => {
       '10m'
     );
 
-    const resetLink = `${config.reset_pass_ui_link}/reset-password?email=${user.email}&token=${resetToken}`;
+    const resetLink = `${config.reset_pass_ui_link}/reset-password?email=${jwtPayload.userId}&token=${resetToken}`;
     
     await sendEmail(user.email, resetLink);
   
@@ -128,46 +127,34 @@ const forgetPassword = async (userEmail: string) => {
 };
 
 
-const resetPassword = async(payload:{email:string; newPassword:string},token:string)=>{
+const resetPassword = async (
+  payload: { email: string; newPassword: string },
+  token: string
+) => {
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
 
-  
-  const user = await User.findOne(payload?.email);
-  console.log('user', user);
- 
-     if (!user) {
-       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
-     }
- 
-     
-   // checking if the given token is valid
-   const decoded = verifyToken(token, config.jwt_access_secret as string);
+  const user = await User.findById(decoded.userId);
 
-if (payload.email !== decoded.userEmail) {
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
 
-  console.log(payload.email, decoded.userId);
+  // Optional: Verify email matches user for extra safety
+  if (payload.email !== user.email) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
+  }
 
-  throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
-}
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
 
-//hash new password
-const newHashedPassword = await bcrypt.hash(
-  payload.newPassword,
-  Number(config.bcrypt_salt_rounds),
-);
-
-await User.findOneAndUpdate(
-  {
-    email: decoded.userEmail,
-    role: decoded.role,
-  },
-
-  {
+  await User.findByIdAndUpdate(user._id, {
     password: newHashedPassword,
     passwordChangedAt: new Date(),
-  },
-);
+  });
+};
 
-}
 
 export const AuthServices = { loginUser,refreshToken ,forgetPassword,resetPassword};
 

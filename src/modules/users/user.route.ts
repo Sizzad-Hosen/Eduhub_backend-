@@ -4,6 +4,7 @@ import {  studentValidationSchemas } from "../student/student.validation";
 import { UserControllers } from "./user.controller";
 import { TeacherValidationSchemas } from "../teacher/teacher.validation";
 import { ResearcherValidationSchemas } from "../researcher/researcher.validation";
+import auth from "../../app/middlewares/auth";
 
 const router = express.Router();
 
@@ -25,6 +26,11 @@ validateRequest(ResearcherValidationSchemas.createResearcherValidation),
 UserControllers.createResearcherController
 
 )
+
+router.get('/me',
+    
+ auth('student','researcher','teacher'),
+UserControllers.getMe)
 
 
 export const UserRoutes = router;

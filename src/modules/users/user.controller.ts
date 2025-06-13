@@ -3,6 +3,7 @@ import catchAsync from "../../app/utils/catchAsync";
 import sendResponse from "../../app/utils/sendResponse";
 import { UserServices } from "./user.service";
 import httpStatus from "http-status";
+import AppError from "../../app/config/error/AppError";
 
 export const createStudentController = catchAsync(async (req: Request, res: Response) => {
   
@@ -41,6 +42,30 @@ export const createResearcherController = catchAsync(async (req, res) => {
     message: "Researcher created successfully",
     data: result,
   });
+
+});
+
+
+const getMe = catchAsync(async (req, res) => {
+
+  const token = req.headers.authorization;
+
+console.log(" token:", token);
+
+  if (!token) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Token not found!');
+  }
+
+  const accessToken = token.replace(/^Bearer\s/, ''); // ✅ Remove "Bearer "
+
+  const result = await UserServices.getMe(accessToken); // 🔥 Use cleaned token
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User retrieved successfully',
+    data: result,
+  });
 });
 
 
@@ -48,7 +73,8 @@ export const UserControllers = {
 
  createStudentController,
  createTeacherController ,
- createResearcherController
+ createResearcherController,
+ getMe
 
 }
 
