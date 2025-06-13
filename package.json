@@ -28,6 +28,7 @@
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.1",
+    "nodemailer": "^7.0.3",
     "zod": "^3.25.60"
   },
   "devDependencies": {
@@ -39,6 +40,7 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^24.0.0",
+    "@types/nodemailer": "^6.4.17",
     "eslint": "^9.28.0",
     "globals": "^16.2.0",
     "prettier": "^3.5.3",

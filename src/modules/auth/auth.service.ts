@@ -5,6 +5,7 @@ import { createToken, verifyToken } from "./auth.utils";
 import config from "../../app/config";
 import bcrypt from "bcrypt"
 import httpStatus from 'http-status';
+import { sendEmail } from "../../app/utils/sendEmail";
 
 
 const loginUser = async (payload: TLoginUser) => {
@@ -90,34 +91,23 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const forgetPassword = async (userId: string) => {
+const forgetPassword = async (userEmail: string) => {
   try {
     // ✅ Check if the user exists
-    const user = await User.isUserExistsByCustomId(userId);
- console.log('user', user);
+    const user = await User.findOne({ email: userEmail });
+    console.log('user', user);
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
     }
 
-    // ✅ Check if the user is deleted
-    if (user.isDeleted) {
-      throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!');
-    }
-
-    // ✅ Check if the user is blocked
-    if (user.status === 'blocked') {
-      throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
-    }
-
     // ✅ Generate JWT for password reset
     const jwtPayload = {
-      userId: user.id,
+      userEmail: user.email,
       role: user.role,
     };
 
-    console.log(jwtPayload);
-
+    console.log('JWT Payload:', jwtPayload);
 
     const resetToken = createToken(
       jwtPayload,
@@ -125,10 +115,9 @@ const forgetPassword = async (userId: string) => {
       '10m'
     );
 
- 
-    const resetLink = `${config.reset_pass_ui_link}/reset-password?id=${user.id}&token=${resetToken}`;
+    const resetLink = `${config.reset_pass_ui_link}/reset-password?email=${user.email}&token=${resetToken}`;
     
-    sendEmail(user?.email, resetLink)
+    await sendEmail(user.email, resetLink);
   
     console.log('Reset Password Link:', resetLink);
     return resetLink;
@@ -138,29 +127,25 @@ const forgetPassword = async (userId: string) => {
   }
 };
 
-const resetPassword = async(payload:{id:string; newPassword:string},token:string)=>{
+
+const resetPassword = async(payload:{email:string; newPassword:string},token:string)=>{
 
   
-  const user = await UserModel.isUserExistsByCustomId(payload?.id);
+  const user = await User.findOne(payload?.email);
   console.log('user', user);
  
      if (!user) {
        throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
      }
  
-     if (user.isDeleted) {
-       throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!');
-     }
- 
-   
-     if (user.status === 'blocked') {
-       throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
-     }
+     
    // checking if the given token is valid
    const decoded = verifyToken(token, config.jwt_access_secret as string);
 
-if (payload.id !== decoded.userId) {
-  console.log(payload.id, decoded.userId);
+if (payload.email !== decoded.userEmail) {
+
+  console.log(payload.email, decoded.userId);
+
   throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
 }
 
@@ -170,14 +155,14 @@ const newHashedPassword = await bcrypt.hash(
   Number(config.bcrypt_salt_rounds),
 );
 
-await UserModel.findOneAndUpdate(
+await User.findOneAndUpdate(
   {
-    id: decoded.userId,
+    email: decoded.userEmail,
     role: decoded.role,
   },
+
   {
     password: newHashedPassword,
-    needsPasswordChange: false,
     passwordChangedAt: new Date(),
   },
 );
@@ -185,3 +170,4 @@ await UserModel.findOneAndUpdate(
 }
 
 export const AuthServices = { loginUser,refreshToken ,forgetPassword,resetPassword};
+
