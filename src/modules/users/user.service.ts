@@ -1,6 +1,6 @@
 import { TStudent } from "../student/student.interface";
 import { StudentModel } from "../student/student.model";
-import { UserModel } from "./user.model";
+import { User } from "./user.model";
 import { TUser } from "./user.interface";
 import config from "../../app/config";
 import { TTeacher } from "../teacher/teacher.interface";
@@ -18,13 +18,13 @@ export const createStudentService = async (studentData: TStudent) => {
   };
 
   // 2. Check for existing user
-  const existingUser = await UserModel.findOne({ email: userData.email });
+  const existingUser = await User.findOne({ email: userData.email });
   if (existingUser) {
     throw new Error("Email already exists");
   }
 
   // 3. Create user
-  const newUser = await UserModel.create(userData);
+  const newUser = await User.create(userData);
 
 
   console.log("new user", newUser);
@@ -53,13 +53,13 @@ export const createTeacherService = async (teacherData: TTeacher) => {
   };
 
   // 2. Check for existing user
-  const existingUser = await UserModel.findOne({ email: userData.email });
+  const existingUser = await User.findOne({ email: userData.email });
   if (existingUser) {
     throw new Error("Email already exists");
   }
 
   // 3. Create user
-  const newUser = await UserModel.create(userData);
+  const newUser = await User.create(userData);
 
   // 4. Link teacher to user
   teacherData.user = newUser._id;
@@ -82,12 +82,12 @@ export const createResearcherService = async (researcherData: TResearcher) => {
     role: "researcher",
   };
 
-  const existingUser = await UserModel.findOne({ email: userData.email });
+  const existingUser = await User.findOne({ email: userData.email });
   if (existingUser) {
     throw new Error("Email already exists");
   }
 
-  const newUser = await UserModel.create(userData);
+  const newUser = await User.create(userData);
   researcherData.user = newUser._id;
 
   const newResearcher = await ResearcherModel.create(researcherData);

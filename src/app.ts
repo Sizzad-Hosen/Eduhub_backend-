@@ -9,6 +9,7 @@ import { UserRoutes } from './modules/users/user.route'
 import { StudentRoutes } from './modules/student/student.route'
 import { ResearcherRoutes } from './modules/researcher/researcher.route'
 import { TeacherRoutes } from './modules/teacher/teacher.route'
+import { AuthRoutes } from './modules/auth/auth.route'
 
 const app: Application = express()
 
@@ -31,6 +32,7 @@ app.use(express.json())
  app.use('/api/v1/students',StudentRoutes)
  app.use('/api/v1/researchers',ResearcherRoutes)
  app.use('/api/v1/teachers',TeacherRoutes)
+ app.use('/api/v1/auth',AuthRoutes)
 
 app.use(globalErrorHandler)
 app.use(notFound)
