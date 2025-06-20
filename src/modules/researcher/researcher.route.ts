@@ -12,6 +12,8 @@ const router = express.Router();
 
 router.get("/", ResearcherControllers.getAllResearchersController
 )
+router.get("/:researcherId", ResearcherControllers.getSingelResearcher
+)
 // router.put("/", StudentControllers.getAllStudentsController
 // )
 

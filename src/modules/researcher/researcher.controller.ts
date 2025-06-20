@@ -36,7 +36,24 @@ export const updateResearchController = catchAsync(async (req, res) => {
   });
 });
 
+
+const getSingelResearcher = catchAsync(async (req, res) => {
+
+  const { researcherId } = req.params;
+
+  const result = await ResearcherServices.getSingelResearcherService(researcherId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Researcher retrieved successfully",
+    data: result,
+  });
+  
+});
+
 export const ResearcherControllers = {
     getAllResearchersController,
-    updateResearchController
+    updateResearchController,
+    getSingelResearcher
 }

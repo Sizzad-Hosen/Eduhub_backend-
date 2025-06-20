@@ -58,8 +58,20 @@ export const updateResearcherService = async (
   return updatedResearcher;
 };
 
+const getSingelResearcherService = async (id: string) => {
+
+  const student = await ResearcherModel.findById(id).populate('user');
+
+  if (!student) {
+    throw new Error("Student not found");
+  }
+
+  return student;
+}
+
 export const ResearcherServices = {
     getAllResearchersService,
-    updateResearcherService
+    updateResearcherService,
+    getSingelResearcherService 
 
 }

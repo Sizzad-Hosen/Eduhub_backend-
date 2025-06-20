@@ -40,7 +40,7 @@ const getSingelTeacher = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Student retrieved successfully",
+    message: "Teacher retrieved successfully",
     data: result,
   });
   
