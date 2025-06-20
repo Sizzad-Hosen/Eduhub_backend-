@@ -16,7 +16,7 @@ const studentSchema = new Schema<TStudent>(
     password: { type: String, required: true },
     address: { type: addressSchema, required: true },
     experience: { type: String, required: true },
-    skill: { type: String, required: true },
+    skill:  [{ type: String, required: true }],
     university: { type: String, required: true },
     bio: { type: String, required: true },
     work: { type: String },

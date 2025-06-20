@@ -21,7 +21,7 @@ export const createResearcherValidation = z.object({
   address: addressValidation,
   expertise: z.string(),
   experience: z.string(),
-  skill: z.string(),
+  skill:  z.array(z.string().min(1, "Skill must be at least 1 character")),
   bsc: z.string(),
   msc: z.string().optional(),
   phd: z.string().optional(),

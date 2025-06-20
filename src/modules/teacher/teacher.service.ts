@@ -1,11 +1,23 @@
+import QueryBuilder from "../../app/builder/QueryBuilder";
+import { teacherSearchableFields } from "./teacher.constant";
 import { TTeacher } from "./teacher.interface";
 import { TeacherModel } from "./teacher.model";
 
-export const getAllTeacherService = async () => {
+export const getAllTeacherService = async (query?: any) => {
 
-  const teachers = await TeacherModel.find().populate("user"); 
+    const teacherQuery = new QueryBuilder(
+      TeacherModel.find().populate('user'),
+      query
+    )
+    .search(teacherSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+    console.log(teacherQuery);
 
-  return teachers;
+    const result = await teacherQuery.modelQuery;
+    return result;
 };
 
 

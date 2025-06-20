@@ -7,6 +7,7 @@ import handleValidationError from '../config/error/handleValidationError';
 import handleCastError from '../config/error/handleCastError';
 import AppError from '../config/error/AppError';
 import config from '../config';
+import handleDuplicateError from '../config/error/handleDublicateError';
 
 
 const globalErrorHandler: ErrorRequestHandler = (
@@ -32,7 +33,11 @@ const globalErrorHandler: ErrorRequestHandler = (
     const simplifiedError = handleZodError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
+    errorSources = Array.isArray(simplifiedError?.errorSources)
+      ? simplifiedError?.errorSources
+      : simplifiedError?.errorSources
+        ? [simplifiedError.errorSources]
+        : [];
 
   }
   else if (err?.name === 'ValidationError') {
@@ -63,7 +68,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     ];
   }
 
-  return res.status(statusCode).json({
+  res.status(statusCode).json({
     success: false,
     message,
     errorSources,

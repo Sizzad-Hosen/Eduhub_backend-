@@ -1,11 +1,25 @@
+import QueryBuilder from "../../app/builder/QueryBuilder";
+import { researcherSearchableFields } from "./researcher.constant";
 import { TResearcher } from "./researcher.interface";
 import { ResearcherModel } from "./researcher.model";
 
-export const getAllResearchersService = async () => {
+export const getAllResearchersService = async (query: any = {}) => {
   // Fetch all researchers, optionally populate the linked user data
-  const researchers = await ResearcherModel.find().populate("user");
 
-  return researchers;
+ const researcherQuery = new QueryBuilder(
+
+      ResearcherModel.find().populate('user'),
+      query
+    )
+    .search(researcherSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await researcherQuery.modelQuery;
+  return result;
+  
 };
 
 

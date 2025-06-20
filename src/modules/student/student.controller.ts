@@ -9,7 +9,8 @@ import { StudentServices } from "./student.service";
 
 
 export const getAllStudentsController = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsService();
+  
+  const result = await StudentServices.getAllStudentsService(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -20,15 +21,14 @@ export const getAllStudentsController = catchAsync(async (req, res) => {
 });
 
 export const updateStudentController = catchAsync(async (req, res) => {
-
-   const { studentId } = req.params;
+  const { studentId } = req.params;
   const payload = req.body;
 
-  console.log(req.params);
-  console.log(req.body);
-
-
-  const result = await StudentServices.updateStudentService(studentId, payload);
+  // Clean user field if it's null or unchanged
+  if (!payload.user || payload.user === 'null') {
+    delete payload.user;
+  }
+  const result = await StudentServices.updateStudentService(studentId, payload, req.file);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

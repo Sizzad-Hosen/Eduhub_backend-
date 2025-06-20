@@ -7,9 +7,7 @@ export const addressValidation = z.object({
   presentAddress: z.string().min(1, "Present address is required"),
 });
 
-
 export const studentValidation = z.object({
-  
   body:z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
@@ -17,11 +15,10 @@ export const studentValidation = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   address: addressValidation,
   experience: z.string().min(1, "Experience is required"), // ✅ spelling fixed here
-  skill: z.string().min(1, "Skill is required"),
+  skill:  z.array(z.string().min(1, "Skill must be at least 1 character")),
   university: z.string().min(1, "University is required"),
   bio: z.string().min(1, "Bio is required"),
   work: z.string().optional(),
-  user: z.string().min(24, "User must be a valid Mongo ObjectId"),
   academicInterests: z.array(z.string()).optional(),
   course: z.string().optional(),
   connectRequests: z.array(z.string()).optional(),
@@ -40,7 +37,7 @@ export const studentUpdateValidation = z.object({
     password: z.string().min(6, "Password must be at least 6 characters").optional(),
     address: addressValidation.optional(),
     experience: z.string().optional(),
-    skill: z.string().optional(),
+    skill: z.array(z.string()).optional(),
     university: z.string().optional(),
     bio: z.string().optional(),
     work: z.string().optional(),
@@ -48,7 +45,7 @@ export const studentUpdateValidation = z.object({
     academicInterests: z.array(z.string()).optional(),
     course: z.string().optional(),
     connectRequests: z.array(z.string()).optional(),
-    profileImg: z.string().url("Profile image must be a valid URL").optional(),
+    profileImg: z.string().optional(),
   }),
 });
 

@@ -24,13 +24,13 @@ export const createTeacherValidation = z.object({
   address: addressValidation,
   expertise: z.string().min(1, "Expertise is required"),
   experience: z.string().min(1, "Experience is required"),
-  skill: z.string().min(1, "Skill is required"),
+  skill: z.array( z.string()).min(1, "Skill is required"),
   bsc: z.string().min(1, "BSc institution is required"),
   msc: z.string().optional(),
   phd: z.string().optional(),
   currentlyWorkingAt: z.string().optional(),
   bio: z.string().min(1, "Bio is required"),
-  user: z.string().min(24, "User must be a valid Mongo ObjectId").optional(),
+  
   profileImg: z.string().optional(),
 
  })

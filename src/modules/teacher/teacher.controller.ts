@@ -5,7 +5,7 @@ import { TeacherServices } from "./teacher.service";
 
 // Controller to get all teachers
 export const getAllTeacherController = catchAsync(async (req, res) => {
-  const teachers = await TeacherServices.getAllTeacherService();
+  const teachers = await TeacherServices.getAllTeacherService(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

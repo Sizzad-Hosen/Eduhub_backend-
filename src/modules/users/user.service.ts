@@ -12,6 +12,7 @@ import { verifyToken } from "../auth/auth.utils";
 import AppError from "../../app/config/error/AppError";
 import httpStatus from "http-status";
 
+
 export const createStudentService = async (studentData: TStudent) => {
   // 1. Construct user data from student
   const userData: TUser = {

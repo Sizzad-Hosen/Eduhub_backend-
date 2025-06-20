@@ -14,7 +14,7 @@ export interface TStudent extends Document {
   number: string;
   address: Address;
   experience: string;
-  skill: string;
+  skill: string[];
   university: string;
   bio: string;
   work?: string;

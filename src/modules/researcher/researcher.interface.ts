@@ -14,7 +14,7 @@ export interface TResearcher {
   address: Address;
   expertise: string;
   experience: string;
-  skill: string;
+ skill: string[];  
   bsc: string;
   msc: string;
   phd: string;
