@@ -22,8 +22,6 @@ export interface TResearcher {
   bio: string;
   user: Types.ObjectId;
   profileImg?: string;
-
-  // ✅ New fields
   researchArea?: string;
   researchPaper?: {
     title: string;

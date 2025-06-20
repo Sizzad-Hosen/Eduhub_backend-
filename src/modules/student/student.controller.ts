@@ -38,10 +38,26 @@ export const updateStudentController = catchAsync(async (req, res) => {
   });
 });
 
+const getSingelStudentController = catchAsync(async (req, res) => {
+
+  const { studentId } = req.params;
+
+  const result = await StudentServices.getSingelStdentService(studentId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Student retrieved successfully",
+    data: result,
+  });
+  
+});
+
 
 export const StudentControllers = {
 
     getAllStudentsController,
-    updateStudentController
+    updateStudentController,
+    getSingelStudentController
 
 }

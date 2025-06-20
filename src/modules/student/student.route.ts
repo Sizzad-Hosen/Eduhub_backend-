@@ -10,6 +10,9 @@ const router = express.Router();
 
 router.get("/", StudentControllers.getAllStudentsController
 )
+router.get("/:studentId", StudentControllers.getSingelStudentController
+)
+
 router.patch("/", StudentControllers.getAllStudentsController
 )
 
