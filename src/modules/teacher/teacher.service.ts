@@ -49,8 +49,20 @@ export const updateTeacherService  = async (id: string, payload: Partial<TTeache
   return updatedTeacher;
 };
 
+const getSingelTeacherService = async (id: string) => {
+
+  const student = await TeacherModel.findById(id).populate('user');
+
+  if (!student) {
+    throw new Error("Student not found");
+  }
+
+  return student;
+}
+
 
 export const TeacherServices = {
     getAllTeacherService,
-    updateTeacherService
+    updateTeacherService,
+    getSingelTeacherService
 }

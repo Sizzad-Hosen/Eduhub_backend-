@@ -13,6 +13,10 @@ router.get("/",
     TeacherControllers.getAllTeacherController
 )
 
+router.get("/:teacherId",
+    TeacherControllers.getSingelTeacher
+)
+
 router.patch("/:teacherId",
      upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
