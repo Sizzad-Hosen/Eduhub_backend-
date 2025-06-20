@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { Address, TTeacher } from "./teacher.interface";
+import { optional } from "zod";
 
 
 const addressSchema = new Schema<Address>(
@@ -20,7 +21,7 @@ const teacherSchema = new Schema<TTeacher>(
     password:{type:String, required:true},
     expertise:{type:String, required:true},
     experience: { type: String, required: true },
-    skill: { type: [String], required: true },
+    skill: [{ type: String, optional:true}],
     bsc: { type: String, required: true },
     msc: { type: String },
     phd: { type: String },

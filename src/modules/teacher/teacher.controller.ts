@@ -20,7 +20,7 @@ export const updateTeacherController = catchAsync(async (req, res) => {
   const { teacherId } = req.params;
   const payload = req.body;
 
-  const updatedTeacher = await TeacherServices.updateTeacherService(teacherId, payload);
+  const updatedTeacher = await TeacherServices.updateTeacherService(teacherId, payload,req.file);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

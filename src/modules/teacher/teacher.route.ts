@@ -1,9 +1,10 @@
 
 
- import express from "express"
+ import express, { NextFunction, Request, Response } from "express"
 import validateRequest from "../../app/middlewares/validateRequest";
 import { TeacherControllers } from "./teacher.controller";
 import { TeacherValidationSchemas } from "./teacher.validation";
+import { upload } from "../../app/utils/sendImageToCloudinary";
 
 
 const router = express.Router();
@@ -13,6 +14,11 @@ router.get("/",
 )
 
 router.patch("/:teacherId",
+     upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
     validateRequest(TeacherValidationSchemas.updateTeacherValidation)
     ,
      TeacherControllers.updateTeacherController)

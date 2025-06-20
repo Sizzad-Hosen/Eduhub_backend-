@@ -1,9 +1,10 @@
 
 
- import express from "express"
+import express, { NextFunction, Request, Response } from 'express'
 import { ResearcherControllers } from "./researcher.controller";
 import { ResearcherValidationSchemas, updateResearcherValidation } from "./researcher.validation";
 import validateRequest from "../../app/middlewares/validateRequest";
+import { upload } from "../../app/utils/sendImageToCloudinary";
 
 
 
@@ -15,6 +16,11 @@ router.get("/", ResearcherControllers.getAllResearchersController
 // )
 
 router.patch("/:researcherId",
+        upload.single('file'),
+      (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data);
+        next();
+      },
     validateRequest(ResearcherValidationSchemas.updateResearcherValidation)
     ,
      ResearcherControllers.updateResearchController

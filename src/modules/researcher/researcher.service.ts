@@ -1,4 +1,5 @@
 import QueryBuilder from "../../app/builder/QueryBuilder";
+import { sendImageToCloudinary } from "../../app/utils/sendImageToCloudinary";
 import { researcherSearchableFields } from "./researcher.constant";
 import { TResearcher } from "./researcher.interface";
 import { ResearcherModel } from "./researcher.model";
@@ -25,8 +26,22 @@ export const getAllResearchersService = async (query: any = {}) => {
 
 export const updateResearcherService = async (
   id: string,
-  payload: Partial<TResearcher>
+  payload: Partial<TResearcher>,
+  file:any
 ) => {
+   // ✅ Find existing student
+    const userData = await ResearcherModel.findById(id).populate("user");
+    if (!userData) {
+      throw new Error("Student not found");
+    }
+  
+    // ✅ File Upload
+    if (file) {
+      console.log('[11] Starting file upload...');
+      const imageName = `${userData._id}_${payload?.name || userData.name}`;
+      const { secure_url } = await sendImageToCloudinary(imageName, file.path);
+      payload.profileImg = secure_url;
+    }
   const updatedResearcher = await ResearcherModel.findByIdAndUpdate(
     id,
     payload,

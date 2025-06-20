@@ -32,12 +32,7 @@ export const updateStudentService = async (
   payload: Partial<TStudent>,
   file?: any
 ) => {
-  console.log('[10] Update Student Service called with ID:', id, 'and payload:', payload);
 
-  // ✅ Validate MongoDB ObjectId
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error("Invalid ID format");
-  }
 
   // ✅ Find existing student
   const userData = await StudentModel.findById(id).populate("user");

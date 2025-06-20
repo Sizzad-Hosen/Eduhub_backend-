@@ -24,7 +24,9 @@ export const createTeacherValidation = z.object({
   address: addressValidation,
   expertise: z.string().min(1, "Expertise is required"),
   experience: z.string().min(1, "Experience is required"),
-  skill: z.array( z.string()).min(1, "Skill is required"),
+skill: z.array(z.string()).min(1, "Skill is required").optional(),
+
+
   bsc: z.string().min(1, "BSc institution is required"),
   msc: z.string().optional(),
   phd: z.string().optional(),
@@ -45,7 +47,7 @@ export const updateTeacherValidation = z.object({
     address: addressValidation.optional(),
     expertise: z.string().min(1, "Expertise is required").optional(),
     experience: z.string().min(1, "Experience is required").optional(),
-    skill: z.string().min(1, "Skill is required").optional(),
+    skill: z.array(z.string()).min(1, "Skill is required").optional(),
     bsc: z.string().min(1, "BSc institution is required").optional(),
     msc: z.string().optional(),
     phd: z.string().optional(),

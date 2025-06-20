@@ -26,7 +26,7 @@ export const updateResearchController = catchAsync(async (req, res) => {
   console.log(req.body);
 
 
-  const result = await ResearcherServices.updateResearcherService(researcherId, payload);
+  const result = await ResearcherServices.updateResearcherService(researcherId, payload, req.file);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -43,7 +43,7 @@ export const updateResearcherValidation = z.object({
     address: addressValidation.optional(),
     expertise: z.string().optional(),
     experience: z.string().optional(),
-    skill: z.string().optional(),
+    skill: z.array(z.string()),
     bsc: z.string().optional(),
     msc: z.string().optional(),
     phd: z.string().optional(),
@@ -61,3 +61,7 @@ export const ResearcherValidationSchemas = {
   createResearcherValidation,
   updateResearcherValidation
 }
+
+
+
+
