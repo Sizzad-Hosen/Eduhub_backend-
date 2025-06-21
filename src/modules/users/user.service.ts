@@ -129,11 +129,66 @@ const getMe = async (token: string) => {
   return result;
 };
 
+export const findMatchesByRole = async (userId: string, role: string) => {
+  let userData: any;
+
+  if (role === "student") {
+    userData = await StudentModel.findOne({ user: userId });
+  } else if (role === "teacher") {
+    userData = await TeacherModel.findOne({ user: userId });
+  } else if (role === "researcher") {
+    userData = await ResearcherModel.findOne({ user: userId });
+  } else {
+    throw new Error("Invalid role");
+  }
+
+  if (!userData) throw new Error("User data not found");
+
+  const { address, skill = [], academicInterests = [], expertise = "", researchArea = "" } = userData;
+  const city = address?.city;
+
+  // Build exact-match conditions
+  const matchConditions = [
+    { "address.city": city },
+    ...(skill.length ? [{ skill: { $in: skill } }] : []),
+    ...(academicInterests.length ? [{ academicInterests: { $in: academicInterests } }] : []),
+    ...(expertise      ? [{ expertise }]       : []),
+    ...(researchArea   ? [{ researchArea }]    : []),
+  ];
+
+  const filter = {
+    _id: { $ne: userData._id },
+    $or: matchConditions,
+  };
+
+  // Fetch up to 10 matches per role
+  const teacherMatches = await TeacherModel.find(filter)
+    .limit(10)
+    .populate("user");
+
+  const researcherMatches = await ResearcherModel.find(filter)
+    .limit(10)
+    .populate("user");
+
+  const studentMatches =
+    role === "teacher" || role === "researcher"
+      ? await StudentModel.find(filter)
+          .limit(10)
+          .populate("user")
+      : [];
+
+  return {
+    teachers:   teacherMatches,
+    researchers: researcherMatches,
+    students:    studentMatches,
+  };
+};
 
 
 export const UserServices = {
   createStudentService,
   createTeacherService,
   createResearcherService,
-  getMe
+  getMe,
+  findMatchesByRole
 };

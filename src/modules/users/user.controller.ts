@@ -68,13 +68,33 @@ console.log(" token:", token);
   });
 });
 
+export const getMatchedUsers = catchAsync(async (req, res) => {
+
+  console.log("req.user:", req.user);
+
+  if (!req.user) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'User not authenticated');
+  }
+  const role = req.user.role;
+  const userId = req.user.userId;
+
+  const matches = await UserServices.findMatchesByRole(userId, role);
+
+  res.status(200).json({
+    success: true,
+    message: "Matching users retrieved successfully",
+    data: matches,
+  });
+});
+
 
 export const UserControllers = {
 
  createStudentController,
  createTeacherController ,
  createResearcherController,
- getMe
+ getMe,
+ getMatchedUsers
 
 }
 

@@ -5,7 +5,7 @@ import { getAllResearchersService, ResearcherServices } from "./researcher.servi
 
 export const getAllResearchersController = catchAsync(async (req, res) => {
 
-  const result = await ResearcherServices.getAllResearchersService();
+  const result = await ResearcherServices.getAllResearchersService(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

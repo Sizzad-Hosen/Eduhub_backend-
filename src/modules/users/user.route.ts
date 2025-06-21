@@ -8,6 +8,7 @@ import auth from "../../app/middlewares/auth";
 
 const router = express.Router();
 
+router.get("/match",auth('student','researcher','teacher'), UserControllers.getMatchedUsers)
 router.post("/create-student", 
 
 validateRequest(studentValidationSchemas.studentValidation),
