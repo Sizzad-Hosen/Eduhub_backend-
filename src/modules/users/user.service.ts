@@ -178,9 +178,14 @@ export const findMatchesByRole = async (userId: string, role: string) => {
       : [];
 
   return {
-    teachers:   teacherMatches,
-    researchers: researcherMatches,
-    students:    studentMatches,
+
+    result:{
+        teacherMatches,
+    researcherMatches,
+      studentMatches,
+
+    }
+
   };
 };
 

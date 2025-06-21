@@ -23,4 +23,5 @@ export interface TStudent extends Document {
   course?: string;
   connectRequests?: string[];
   profileImg?: string;
+  
 }
