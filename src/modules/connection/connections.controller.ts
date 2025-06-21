@@ -22,8 +22,23 @@ export const sendConnectionRequest = catchAsync(async (req: any, res: Response) 
     data: result,
   });
 });
+export const recivedConnectionRequest = catchAsync(async (req: any, res: Response) => {
+
+
+ const receiverId = req.user.userId;
+
+  const result = await ConnnectionServices.getReceivedConnections(receiverId);
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Recieved request successfully",
+    data: result,
+  });
+});
 
 
 export const ConnectionControllers = {
-    sendConnectionRequest
+    sendConnectionRequest,
+    recivedConnectionRequest
 }

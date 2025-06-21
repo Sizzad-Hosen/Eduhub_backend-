@@ -19,8 +19,11 @@ console.log("Creating connection with:", { senderId, receiverId });
 };
 
 export const getReceivedConnections = async (receiverId: string) => {
-  return Connection.find({ receiver: receiverId, status: "pending" })
+
+  return Connection.find({ receiverId, status: "pending" })
+
     .populate("sender", "name email role profileImg");
+    
 };
 
 export const updateConnectionStatus = async (connectionId: string, action: "accepted" | "rejected") => {

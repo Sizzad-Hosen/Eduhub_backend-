@@ -9,7 +9,7 @@ const router = express.Router();
 
 
 // Apply auth middleware if needed
-// router.get("/received", auth(), ConnectionControllers.sendConnectionRequest);
+ router.get("/received", auth(), ConnectionControllers.recivedConnectionRequest);
 
 router.post("/send", auth(),
 validateRequest(ConnectionValidation.connectionRequestZodSchema)
