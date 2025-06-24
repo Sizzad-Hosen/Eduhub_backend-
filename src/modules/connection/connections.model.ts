@@ -1,7 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 
+
 const connectionSchema = new mongoose.Schema(
   {
+
+
     senderId: {
       type: Schema.Types.ObjectId,
       ref: "User",

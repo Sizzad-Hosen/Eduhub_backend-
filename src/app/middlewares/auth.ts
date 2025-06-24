@@ -21,9 +21,6 @@ const auth = (...requiredRoles: string[]) => {
     try {
       const authHeader = req.headers.authorization || req.headers.Authorization;
     
-      console.log("Verifying token:",authHeader );
-
-
       if (!authHeader || typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
         throw new AppError(httpStatus.UNAUTHORIZED, 'Authorization header missing or invalid');
       }
@@ -39,10 +36,7 @@ const auth = (...requiredRoles: string[]) => {
       if (!decoded?.userId || !decoded?.role) {
         throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token payload');
       }
-      console.log("Decoded token:", decoded);
-      console.log("JWT secret used:", config.jwt_access_secret);
-
-
+    
       const user = await User.findById(decoded.userId);
 
       if (!user) {

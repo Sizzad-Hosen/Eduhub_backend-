@@ -10,12 +10,16 @@ const router = express.Router();
 
 // Apply auth middleware if needed
  router.get("/received", auth(), ConnectionControllers.recivedConnectionRequest);
+ router.get("/getConfrimRequest", auth(), ConnectionControllers.getConnection);
 
 router.post("/send", auth(),
 validateRequest(ConnectionValidation.connectionRequestZodSchema)
 ,
  ConnectionControllers.sendConnectionRequest);
-// router.put("/respond/:id", auth(), respondToConnection);
+
+ router.put("/respond/:id", auth(),
+ validateRequest(ConnectionValidation.updateConnectionSchemas),
+  ConnectionControllers.respondToConnection);
 
 
 
