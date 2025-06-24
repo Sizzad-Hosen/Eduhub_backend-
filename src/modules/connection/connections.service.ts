@@ -8,17 +8,16 @@ import { Connection } from "./connections.model";
 export const sendConnection = async (senderId: string, receiverId: string) => {
 let userId: string | null = null;
 
-  console.log("Received receiverId:", receiverId);
 
   const objectId = new mongoose.Types.ObjectId(receiverId);
   
-console.log("Converted receiverId to ObjectId:", objectId);
+
 
   // Try to find the userId from any profile model
   const student = await StudentModel.findById(objectId);
-  console.log("Found student:", student);
+
   if (student) userId = student.user.toString();
-console.log(userId)
+
   if (!userId) {
     const teacher = await TeacherModel.findById(objectId);
     if (teacher) userId = teacher.user.toString();
