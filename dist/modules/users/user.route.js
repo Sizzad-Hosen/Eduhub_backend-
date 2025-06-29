@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const validateRequest_1 = __importDefault(require("../../app/middlewares/validateRequest"));
+const student_validation_1 = require("../student/student.validation");
+const user_controller_1 = require("./user.controller");
+const teacher_validation_1 = require("../teacher/teacher.validation");
+const researcher_validation_1 = require("../researcher/researcher.validation");
+const auth_1 = __importDefault(require("../../app/middlewares/auth"));
+const router = express_1.default.Router();
+router.get("/match", (0, auth_1.default)('student', 'researcher', 'teacher'), user_controller_1.UserControllers.getMatchedUsers);
+router.post("/create-student", (0, validateRequest_1.default)(student_validation_1.studentValidationSchemas.studentValidation), user_controller_1.UserControllers.createStudentController);
+router.post("/create-teacher", (0, validateRequest_1.default)(teacher_validation_1.TeacherValidationSchemas.createTeacherValidation), user_controller_1.UserControllers.createTeacherController);
+router.post("/create-researcher", (0, validateRequest_1.default)(researcher_validation_1.ResearcherValidationSchemas.createResearcherValidation), user_controller_1.UserControllers.createResearcherController);
+router.get('/me', (0, auth_1.default)('student', 'researcher', 'teacher'), user_controller_1.UserControllers.getMe);
+exports.UserRoutes = router;

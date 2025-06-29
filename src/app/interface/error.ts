@@ -1,10 +1,11 @@
+// src/interface/error.ts
 export type TErrorSources = {
-    path: string | number;
-    message: string;
-  }[];
-  
-  export type TGenericErrorResponse = {
-    statusCode: number;
-    message: string;
-    errorSources: TErrorSources;
-  };
+  path: string | number;
+  message: string;
+};
+
+export type TGenericErrorResponse = {
+  statusCode: number;
+  message: string;
+  errorSources: TErrorSources[]; // <-- Must be an array
+};

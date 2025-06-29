@@ -18,8 +18,9 @@ export const createStudentService = async (studentData: TStudent) => {
   const userData: TUser = {
     name: studentData.name,
     email: studentData.email,
-    password: studentData.password || config.default_password,
+    password: studentData.password ?? config.default_password ?? "default1234",
     role: "student",
+    isDeleted: false,
   };
 
   // 2. Check for existing user
@@ -52,7 +53,7 @@ export const createTeacherService = async (teacherData: TTeacher) => {
   const userData: TUser = {
     name: teacherData.name,
     email: teacherData.email,
-    password: teacherData.password || config.default_password,
+    password: teacherData.password ?? config.default_password ?? "",
     role: "teacher",
     isDeleted: false
   };
@@ -83,8 +84,9 @@ export const createResearcherService = async (researcherData: TResearcher) => {
   const userData: TUser = {
     name: researcherData.name,
     email: researcherData.email,
-    password: researcherData.password || config.default_password,
+    password: researcherData.password ?? config.default_password ?? "",
     role: "researcher",
+    isDeleted: false,
   };
 
   const existingUser = await User.findOne({ email: userData.email });
