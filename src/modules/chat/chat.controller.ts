@@ -1,30 +1,63 @@
 import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+import { ChatServices } from './chat.service';
+import sendResponse from '../../app/utils/sendResponse';
+import catchAsync from '../../app/utils/catchAsync';
 
 
-export const findOrCreateChat = async (req: Request, res: Response) => {
-  try {
-    const { userId1, userId2 } = req.body;
+const findOrCreateChat = catchAsync(async (req: Request, res: Response) => {
+  const { participants } = req.body;
 
-    if (!userId1 || !userId2) {
-      return res.status(400).json({ error: 'userId1 and userId2 are required' });
-    }
-
-    const chat = await chatService.findOrCreateChat(userId1, userId2);
-    res.json(chat);
-  } catch (err) {
-    res.status(500).json({ error: (err as Error).message });
+  console.log("body",req.body)
+  
+  if (!participants || !Array.isArray(participants) || participants.length !== 2) {
+    return sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: 'Exactly two participant IDs are required',
+      data: null
+    });
   }
-};
 
-export const getUserChats = async (req: Request, res: Response) => {
-  try {
-    const userId = req.params.userId;
 
-    if (!userId) return res.status(400).json({ error: 'userId is required' });
+    const chat = await ChatServices.findOrCreateChat(participants[0], participants[1]);
+    
+    console.log("chat",chat)
+    
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Chat retrieved/created successfully',
+      data: chat
+    });
+  
+  
+});
 
-    const chats = await chatService.getUserChats(userId);
-    res.json(chats);
-  } catch (err) {
-    res.status(500).json({ error: (err as Error).message });
+
+const getUserChats = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    return sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: 'userId is required',
+      data: null
+    });
   }
+
+  const chats = await ChatServices.getUserChats(userId);
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User chats retrieved successfully',
+    data: chats
+  });
+});
+
+export const ChatControllers = {
+  findOrCreateChat,
+  getUserChats
 };

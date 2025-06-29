@@ -23,7 +23,12 @@ export const getChatMessages = catchAsync(async (req: Request, res: Response) =>
 });
 
 export const sendMessage = catchAsync(async (req: Request, res: Response) => {
+ 
   const { chatId, senderId, text } = req.body;
+
+  
+  console.log("body",req.body)
+
 
   if (!chatId || !senderId || !text) {
     res.status(400).json({ error: 'chatId, senderId, and text are required' });

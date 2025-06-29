@@ -6,3 +6,4 @@ export interface IChat extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+

@@ -12,6 +12,7 @@ import { TeacherRoutes } from './modules/teacher/teacher.route'
 import { AuthRoutes } from './modules/auth/auth.route'
 import { ConnectionRoutes } from './modules/connection/connections.route'
 import { MessageRoutes } from './modules/message/message.route'
+import { ChatRoutes } from './modules/chat/chat.route'
 
 const app: Application = express()
 
@@ -37,6 +38,7 @@ app.use(express.json())
  app.use('/api/v1/auth',AuthRoutes)
  app.use('/api/v1/connection',ConnectionRoutes)
 app.use('/api/v1/messages', MessageRoutes);
+app.use('/api/v1/chat', ChatRoutes);
 
 app.use(globalErrorHandler)
 app.use(notFound)
