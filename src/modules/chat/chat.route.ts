@@ -8,16 +8,16 @@ import auth from '../../app/middlewares/auth';
 const router = express.Router();
 
 // Create new chat
-router.post('/',
-    validateRequest(ChatValidationSchemas.createChatSchema),
-    ChatControllers.findOrCreateChat
- );
+// router.post('/',
+//     validateRequest(ChatValidationSchemas.createChatSchema),
+//     ChatControllers.findOrCreateChat
+//  );
 
 // Get all chats for a user
 router.get('/',auth(),ChatControllers.getUserChats);
 
-// // Get single chat by ID
-// router.get('/single/:chatId', );
+// Get single chat by ID
+router.post('/',auth(),ChatControllers.getUserChatWithReceiver );
 
 
 export const ChatRoutes = router;

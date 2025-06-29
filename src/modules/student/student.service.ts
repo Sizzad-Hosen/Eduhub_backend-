@@ -7,23 +7,27 @@ import { studentSearchableFields } from "./student.constant";
 import { TStudent } from "./student.interface";
 import { StudentModel } from "./student.model";
 
-
-
 const getAllStudentsService = async (query: Record<string, unknown>) => {
+  const studentQuery = new QueryBuilder(StudentModel.find().populate("user"), query)
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  const studentQuery = new QueryBuilder(StudentModel.find()
-  .populate('user')    
-  , query)
-  .search(studentSearchableFields)
-  .filter()
-  .sort()
-  .paginate()
-  .fields()
-console.log(studentQuery)
+  await studentQuery.countTotal(); // fills total, page, limit in the builder
 
-  const result = await studentQuery.modelQuery;
-  return result;
+  const students = await studentQuery.modelQuery;
 
+  return {
+    data: students,
+    meta: {
+      total: studentQuery.total,
+      page: studentQuery.page,
+      limit: studentQuery.limit,
+      totalPages: studentQuery.totalPages,
+    },
+  };
 };
 
 

@@ -5,23 +5,33 @@ import { TResearcher } from "./researcher.interface";
 import { ResearcherModel } from "./researcher.model";
 
 export const getAllResearchersService = async (query: any = {}) => {
-  // Fetch all researchers, optionally populate the linked user data
-
- const researcherQuery = new QueryBuilder(
-
-      ResearcherModel.find().populate('user'),
-      query
-    )
+  const researcherQuery = new QueryBuilder(
+    ResearcherModel.find().populate('user'),
+    query
+  )
     .search(researcherSearchableFields)
     .filter()
     .sort()
     .paginate()
     .fields();
 
+  // Count total documents matching the filter (without pagination)
+  await researcherQuery.countTotal();
+
+  // Execute the paginated query
   const result = await researcherQuery.modelQuery;
-  return result;
-  
+
+  return {
+    data: result,  // array of researchers
+    meta: {
+      total: researcherQuery.total,
+      page: researcherQuery.page,
+      limit: researcherQuery.limit,
+      totalPages: researcherQuery.totalPages,
+    },
+  };
 };
+
 
 
 export const updateResearcherService = async (

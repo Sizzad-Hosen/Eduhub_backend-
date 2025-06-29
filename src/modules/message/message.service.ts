@@ -10,19 +10,36 @@ export const getChatMessages = async (chatId: string, limit = 50) => {
     .populate('sender', 'username avatar');
 };
 
-export const sendMessage = async (chatId: string, senderId: string, text: string) => {
+export const sendMessage = async (receiverId: string, senderId: string, text: string) => {
+    // Find chat between sender and receiver
+  let chat = await ChatModel.findOne({ participants: { $all: [receiverId,senderId, ] } });
+
+  if (!chat) {
+    // Create new chat if not found
+    chat = await ChatModel.create({
+      participants: [senderId, receiverId],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  } else {
+    // Update chat's updatedAt timestamp
+    chat.updatedAt = new Date();
+    await chat.save();
+  }
   
-    await ChatModel.findByIdAndUpdate(chatId, { updatedAt: new Date() });
-    
+    await ChatModel.findByIdAndUpdate(receiverId, { updatedAt: new Date() });
+
+  // Create message linked to chat
   const message = await MessageModel.create({
-    chat: chatId,
+    chat: chat._id,
     sender: senderId,
     text,
-    readBy: [senderId], 
+    readBy: [senderId],
   });
 
-
   return message;
+
+ 
 };
 
 

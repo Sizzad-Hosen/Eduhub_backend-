@@ -5,21 +5,33 @@ import { TTeacher } from "./teacher.interface";
 import { TeacherModel } from "./teacher.model";
 
 export const getAllTeacherService = async (query?: any) => {
-
-    const teacherQuery = new QueryBuilder(
-      TeacherModel.find().populate('user'),
-      query
-    )
+  const teacherQuery = new QueryBuilder(
+    TeacherModel.find().populate('user'),
+    query
+  )
     .search(teacherSearchableFields)
     .filter()
     .sort()
     .paginate()
     .fields();
-    console.log(teacherQuery);
 
-    const result = await teacherQuery.modelQuery;
-    return result;
+  // Count total docs based on filter
+  await teacherQuery.countTotal();
+
+  // Execute paginated query
+  const result = await teacherQuery.modelQuery;
+
+  return {
+    data: result,
+    meta: {
+      total: teacherQuery.total,
+      page: teacherQuery.page,
+      limit: teacherQuery.limit,
+      totalPages: teacherQuery.totalPages,
+    },
+  };
 };
+
 
 
 export const updateTeacherService  = async (id: string, payload: Partial<TTeacher>,file:any) => {

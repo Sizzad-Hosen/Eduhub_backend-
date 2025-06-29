@@ -11,7 +11,10 @@ export const getAllTeacherController = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Teachers retrieved successfully",
-    data: teachers,
+    data: {
+      data: teachers.data, // the actual teacher records
+      meta: teachers.meta, // pagination info
+    },
   });
 });
 

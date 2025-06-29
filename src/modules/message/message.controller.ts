@@ -6,7 +6,7 @@ import catchAsync from '../../app/utils/catchAsync';
 
 export const getChatMessages = catchAsync(async (req: Request, res: Response) => {
   const { chatId } = req.params;
-  
+
   console.log(req.params);
 
   const limit = Number(req.query.limit) || 50;
@@ -27,18 +27,18 @@ export const getChatMessages = catchAsync(async (req: Request, res: Response) =>
 
 export const sendMessage = catchAsync(async (req: Request, res: Response) => {
  
-  const { chatId, senderId, text } = req.body;
+  const { receiverId, senderId, text } = req.body;
 
   
   console.log("body",req.body)
 
 
-  if (!chatId || !senderId || !text) {
-    res.status(400).json({ error: 'chatId, senderId, and text are required' });
+  if (!receiverId || !senderId || !text) {
+    res.status(400).json({ error: 'receiverId, senderId, and text are required' });
     return;
   }
 
-  const message = await MessageServices.sendMessage(chatId, senderId, text);
+  const message = await MessageServices.sendMessage(receiverId, senderId, text);
 
   sendResponse(res, {
     statusCode: 201,

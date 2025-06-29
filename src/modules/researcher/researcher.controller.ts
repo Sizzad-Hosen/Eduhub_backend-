@@ -4,14 +4,16 @@ import httpStatus from "http-status";
 import { getAllResearchersService, ResearcherServices } from "./researcher.service";
 
 export const getAllResearchersController = catchAsync(async (req, res) => {
-
   const result = await ResearcherServices.getAllResearchersService(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Researchers retrieved successfully",
-    data: result,
+    data: {
+      data: result.data,  // researcher documents
+      meta: result.meta,  // pagination info
+    },
   });
 });
 

@@ -5,34 +5,6 @@ import sendResponse from '../../app/utils/sendResponse';
 import catchAsync from '../../app/utils/catchAsync';
 
 
-const findOrCreateChat = catchAsync(async (req: Request, res: Response) => {
-  const { participants } = req.body;
-
-  console.log("body",req.body)
-  
-  if (!participants || !Array.isArray(participants) || participants.length !== 2) {
-    return sendResponse(res, {
-      statusCode: httpStatus.BAD_REQUEST,
-      success: false,
-      message: 'Exactly two participant IDs are required',
-      data: null
-    });
-  }
-
-
-    const chat = await ChatServices.findOrCreateChat(participants[0], participants[1]);
-    
-    console.log("chat",chat)
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Chat retrieved/created successfully',
-      data: chat
-    });
-  
-  
-});
 
 
 export const   getUserChats= catchAsync(async (req, res) => {
@@ -47,9 +19,12 @@ export const   getUserChats= catchAsync(async (req, res) => {
   }
 
   const userId = req.user.userId;
+  console.log("userId",userId)
   
   const chats = await ChatServices.getUserChats(userId);
+console.log("controelers chats",chats
 
+)
   return sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -58,8 +33,35 @@ export const   getUserChats= catchAsync(async (req, res) => {
   });
 });
 
+export const getUserChatWithReceiver = catchAsync(async (req, res) => {
+  if (!req.user || !req.user.userId) {
+    return sendResponse(res, {
+      statusCode: 401,
+      success: false,
+      message: 'User not authenticated',
+      data: null,
+    });
+  }
+
+  const senderId = req.user.userId;
+  const { receiverId } = req.body;
+
+  console.log("body", req.body)
+  console.log("senderid",senderId)
+
+  // Call service to find chat
+  const chat = await ChatServices.getChatByParticipants(senderId, receiverId);
+  return sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Chat retrieved successfully',
+    data: chat,
+  });
+});
+
 
 export const ChatControllers = {
-  findOrCreateChat,
-  getUserChats
+
+  getUserChats,
+  getUserChatWithReceiver
 };
