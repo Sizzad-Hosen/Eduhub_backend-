@@ -6,6 +6,9 @@ import catchAsync from '../../app/utils/catchAsync';
 
 export const getChatMessages = catchAsync(async (req: Request, res: Response) => {
   const { chatId } = req.params;
+  
+  console.log(req.params);
+
   const limit = Number(req.query.limit) || 50;
 
   if (!chatId) {
