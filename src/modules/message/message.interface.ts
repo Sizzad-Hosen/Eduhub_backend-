@@ -1,4 +1,4 @@
-// interfaces/Message.ts
+
 import { Document, Types } from 'mongoose';
 
 export interface IMessage extends Document {
