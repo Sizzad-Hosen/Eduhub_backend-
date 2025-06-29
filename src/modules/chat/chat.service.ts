@@ -30,8 +30,8 @@ const findOrCreateChat = async (userId1: string, userId2: string) => {
 const getUserChats = async (userId: string) => {
 
   return await ChatModel.find({
-    members: userId,
-  }).populate("members", "name email profileImg role")
+    participants: userId,
+  }).populate("participants", "name email profileImg role")
     .sort({ updatedAt: -1 });
     
 };

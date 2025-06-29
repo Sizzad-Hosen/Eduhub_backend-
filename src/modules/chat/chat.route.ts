@@ -2,6 +2,7 @@ import express from 'express';
 import { ChatControllers } from './chat.controller';
 import validateRequest from '../../app/middlewares/validateRequest';
 import { ChatValidationSchemas } from './chat.validation';
+import auth from '../../app/middlewares/auth';
 
 
 const router = express.Router();
@@ -13,7 +14,7 @@ router.post('/',
  );
 
 // Get all chats for a user
-router.get('/:userId',ChatControllers.getUserChats);
+router.get('/',auth(),ChatControllers.getUserChats);
 
 // // Get single chat by ID
 // router.get('/single/:chatId', );

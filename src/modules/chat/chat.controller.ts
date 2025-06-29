@@ -23,7 +23,7 @@ const findOrCreateChat = catchAsync(async (req: Request, res: Response) => {
     const chat = await ChatServices.findOrCreateChat(participants[0], participants[1]);
     
     console.log("chat",chat)
-    
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -35,27 +35,29 @@ const findOrCreateChat = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-const getUserChats = catchAsync(async (req: Request, res: Response) => {
-  const { userId } = req.params;
+export const   getUserChats= catchAsync(async (req, res) => {
 
-  if (!userId) {
+  if (!req.user || !req.user.userId) {
     return sendResponse(res, {
-      statusCode: httpStatus.BAD_REQUEST,
+      statusCode: httpStatus.UNAUTHORIZED,
       success: false,
-      message: 'userId is required',
-      data: null
+      message: 'User not authenticated',
+      data: null,
     });
   }
 
-  const chats = await ChatServices.getUserChats(userId);
+  const userId = req.user.userId;
   
-  sendResponse(res, {
+  const chats = await ChatServices.getUserChats(userId);
+
+  return sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User chats retrieved successfully',
-    data: chats
+    data: chats,
   });
 });
+
 
 export const ChatControllers = {
   findOrCreateChat,
